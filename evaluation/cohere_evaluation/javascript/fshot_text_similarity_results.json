@@ -1,0 +1,47 @@
+[
+    {
+        "function": "function (state, action) {\n    return _.defaults({\n      isValidating: action.isValidating,\n      lastAction: IS_VALIDATING\n    }, state)\n  }",
+        "prompt_type": "Few-Shot",
+        "cohere_summary": "The function `function (state, action)` takes two parameters, `state` and `action`. It uses the `_.defaults` function, which is likely from the Lodash library, to merge the properties of two objects. In this case, it merges the properties of an object with `isValidating` and `lastAction` keys and the `state` object. The `isValidating` property is set to the value of `action.isValidating`, and the `lastAction` is set to the value `IS_VALIDATING`. The function then returns the merged object. This function appears to be related to state management and validation in a JavaScript application.",
+        "reference_summary": "Update is validating result\n@param {State} state - state to update\n@param {Action} action - action\n@returns {State} - updated state",
+        "BLEU": 0.0,
+        "METEOR": 0.0717,
+        "ROUGE-L": 0.0822
+    },
+    {
+        "function": "function addWidgetForFilter (view, filter, editModeHint) {\n  var gridster = view._widgetsGridster;\n  var row = filter.row || 1;\n  var col = filter.col || 1;\n  var sizeX = filter.size_x || 3;\n  var sizeY = filter.size_y || 3;\n\n  var el = gridster.add_widget('<div class=\"widgetOuterFrame\"></div>', sizeX, sizeY, col, row);\n  var frameView = new WidgetFrameView({\n    model: filter\n  });\n\n  // render, and render content of widget frame\n  view.renderSubview(frameView, el[0]);\n  frameView.renderContent();\n\n  // link element and view so we can:\n  // a) on remove, get to the HTMLElement from the WidgetFrameView\n  // b) on resize, get to the WidgetFrameView from the HTMLElement\n  frameView.gridsterHook = el[0];\n  $(el[0]).data('spotWidgetFrameView', frameView);\n\n  // try to initialize and render possibly present data\n  // only follow editModeHint when the widget is configured, default to true\n  var chartView = frameView.widget;\n  chartView.model.updateConfiguration();\n  if (chartView.model.isConfigured) {\n    if (!filter.isInitialized) {\n      filter.initDataFilter();\n    }\n    if (!chartView.isInitialized) {\n      chartView.initChart();\n    }\n    chartView.update();\n\n    frameView.editMode = editModeHint;\n  } else {\n    // widget is not configured, ignore editModeHint\n    // and always go to edit mode\n    frameView.editMode = true;\n  }\n\n  filter.on('newData', function () {\n    chartView.update();\n  });\n}",
+        "prompt_type": "Few-Shot",
+        "cohere_summary": "The function `addWidgetForFilter` is used to add a new widget to a grid layout. It takes three parameters: `view`, `filter`, and `editModeHint`. The function first retrieves the `gridster` object from the `view` parameter. It then extracts the row, column, sizeX, and sizeY values from the `filter` parameter, with default values provided if not specified.\n\nThe function then uses the `gridster.add_widget` method to add a new widget to the grid, specifying the HTML structure, size, and position. A new `WidgetFrameView` instance, `frameView`, is created and associated with the `filter` model.\n\nThe function proceeds to render the `frameView` and its content using the `view.renderSubview` and `frameView.renderContent` methods, respectively. It establishes links between the HTML element (`el[0]`) and the `frameView` to enable easy access between them.\n\nThe function then checks if the `chartView` (the widget) is configured. If it is, it initializes the `filter` and `chartView` if they haven't been already, and updates the `chartView`. The `editMode` of the `frameView` is set based on the `editModeHint` and the configuration status of the `chartView`.\n\nFinally, an event listener is added to the `filter` to update the `chartView` whenever new data is received.\n\nOverall, the `addWidgetForFilter` function dynamically adds a widget to a grid layout, handles its rendering, initialization, and configuration, and sets up event listeners for data updates.",
+        "reference_summary": "Add a widget to the analyze page for the given filter\n\nview {View}             Ampersand View instance of the analyze page\nfilter {Filter}         Spot filter instance to create the widget for\neditModeHint {boolean}  Try to start plot in editMode (ie. accepts dnd of facets) [true] or in interaction mode (false)",
+        "BLEU": 0.0,
+        "METEOR": 0.1298,
+        "ROUGE-L": 0.0759
+    },
+    {
+        "function": "function inRange (value, min, max) {\n  const int = parseInt(value, 10)\n\n  return (\n    `${int}` === `${value.replace(/^0/, '')}` &&\n    int >= min &&\n    int <= max\n  )\n}",
+        "prompt_type": "Few-Shot",
+        "cohere_summary": "The function `inRange` takes three parameters: `value`, `min`, and `max`. It first converts the `value` to an integer by removing any leading zeros and parsing it as a decimal number. The function then checks if the resulting integer representation of the `value` is within the range specified by `min` and `max`. If the integer value is within the range, the function returns `true`; otherwise, it returns `false`. In summary, this function determines whether a given value, after being converted to an integer, falls within a specified numeric range.",
+        "reference_summary": "Determine if value is within a numeric range\n@param {String|Number} value - value to check\n@param {Number} min - start of range (inclusive)\n@param {Number} max - end of range (inclusive)\n@returns {Boolean} whether or not value is within range",
+        "BLEU": 0.0,
+        "METEOR": 0.1987,
+        "ROUGE-L": 0.1882
+    },
+    {
+        "function": "function markdown(options) {\n  return new Remarkable(extend({\n    breaks: false,\n    html: true,\n    langPrefix: 'lang-',\n    linkify: true,\n    typographer: false,\n    xhtmlOut: false\n  }, options));\n}",
+        "prompt_type": "Few-Shot",
+        "cohere_summary": "The `markdown` function creates and configures a Remarkable instance, which is a popular Markdown parser and renderer in JavaScript. It takes an `options` object as an argument, which allows customization of various Markdown parsing and rendering options. The function then returns the configured Remarkable instance, which can be used to convert Markdown text to HTML or perform other Markdown-related tasks. The default options set by the function include disabling soft line breaks, enabling HTML parsing, setting a language prefix for code blocks, enabling automatic linkification, disabling typographic replacements, and disabling XHTML output. This function provides a flexible way to work with Markdown content in JavaScript applications.",
+        "reference_summary": "Shared settings for remarkable\n\n@param {Object} `options`\n@return {Object}\n@api private",
+        "BLEU": 0.0,
+        "METEOR": 0.0976,
+        "ROUGE-L": 0.046
+    },
+    {
+        "function": "function partitionValueToIndex (partition, value) {\n  var group;\n\n  if (!partition) {\n    // no(sub)partitioning return first element\n    return 0;\n  }\n\n  // with (sub)partitioning\n  group = partition.groups.get(value, 'value');\n\n  if (group) {\n    // string in partition\n    return group.groupIndex;\n  } else {\n    // string not in partition\n    return -1;\n  }\n}",
+        "prompt_type": "Few-Shot",
+        "cohere_summary": "The `partitionValueToIndex` function takes two parameters: `partition` and `value`. It appears to be related to a partitioned data structure, where the `partition` parameter represents the partitioning information, and the `value` parameter is the value for which we want to find the corresponding index within the partition.\n\nHere's a summary of the function:\n\nThe `partitionValueToIndex` function searches for the given `value` within a partitioned data structure. If the value is found in the partition, it returns the index of the group containing that value; otherwise, it returns -1 to indicate that the value is not present in the partition. If no partitioning information is provided, it returns 0, suggesting a default behavior.\n\nThe function first checks if the `partition` parameter is empty or undefined. If there is no partitioning information, it returns 0 as a default value. Otherwise, it attempts to find the group associated with the given `value` within the partition. If the group is found, the function returns the index of that group within the partition. If the value is not found in any group, the function returns -1.\n\nOverall, this function seems to be useful for determining the index of a value within a partitioned data structure, allowing efficient access and manipulation of data based on their values and associated groups.",
+        "reference_summary": "Get the index in chartjs datastructures from the group value\nwith proper fallbacks\n@params {Partition} partition (optional)\n@params {Object} value value\n@returns {number|null} index",
+        "BLEU": 0.0,
+        "METEOR": 0.1399,
+        "ROUGE-L": 0.1239
+    }
+]

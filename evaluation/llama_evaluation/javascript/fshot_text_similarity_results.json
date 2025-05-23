@@ -1,0 +1,47 @@
+[
+    {
+        "function": "function (state, action) {\n    return _.defaults({\n      isValidating: action.isValidating,\n      lastAction: IS_VALIDATING\n    }, state)\n  }",
+        "prompt_type": "Few-Shot",
+        "llama3_summary": "**Function Summary**\n\nThis is a JavaScript function that updates the state of an object based on the given `action`. The function merges two objects using the _.defaults() method, which sets default values for properties if they don't exist in the first object.\n\n**Key Points:**\n\n* It takes two arguments: `state` and `action`.\n* It uses the _.defaults() method to merge two objects.\n* The merged object has the following properties:\n  * `isValidating`: set to the value of `action.isValidating` (or `IS_VALIDATING` if it's not provided).\n  * `lastAction`: always set to `IS_VALIDATING`.\n* This function appears to be part of a state management system, possibly in a Redux or Flux-like architecture.",
+        "reference_summary": "Update is validating result\n@param {State} state - state to update\n@param {Action} action - action\n@returns {State} - updated state",
+        "BLEU": 0.0,
+        "METEOR": 0.0839,
+        "ROUGE-L": 0.0667
+    },
+    {
+        "function": "function addWidgetForFilter (view, filter, editModeHint) {\n  var gridster = view._widgetsGridster;\n  var row = filter.row || 1;\n  var col = filter.col || 1;\n  var sizeX = filter.size_x || 3;\n  var sizeY = filter.size_y || 3;\n\n  var el = gridster.add_widget('<div class=\"widgetOuterFrame\"></div>', sizeX, sizeY, col, row);\n  var frameView = new WidgetFrameView({\n    model: filter\n  });\n\n  // render, and render content of widget frame\n  view.renderSubview(frameView, el[0]);\n  frameView.renderContent();\n\n  // link element and view so we can:\n  // a) on remove, get to the HTMLElement from the WidgetFrameView\n  // b) on resize, get to the WidgetFrameView from the HTMLElement\n  frameView.gridsterHook = el[0];\n  $(el[0]).data('spotWidgetFrameView', frameView);\n\n  // try to initialize and render possibly present data\n  // only follow editModeHint when the widget is configured, default to true\n  var chartView = frameView.widget;\n  chartView.model.updateConfiguration();\n  if (chartView.model.isConfigured) {\n    if (!filter.isInitialized) {\n      filter.initDataFilter();\n    }\n    if (!chartView.isInitialized) {\n      chartView.initChart();\n    }\n    chartView.update();\n\n    frameView.editMode = editModeHint;\n  } else {\n    // widget is not configured, ignore editModeHint\n    // and always go to edit mode\n    frameView.editMode = true;\n  }\n\n  filter.on('newData', function () {\n    chartView.update();\n  });\n}",
+        "prompt_type": "Few-Shot",
+        "llama3_summary": "**Function Summary**\n\nThe `addWidgetForFilter` function creates a new widget for filtering data within a given view. It:\n\n1. Retrieves the gridster instance from the view's `_widgetsGridster` property.\n2. Extracts configuration parameters from the filter object or defaults to them if not provided.\n3. Creates a new widget with the specified size and adds it to the gridster at the specified row and column positions.\n4. Instantiates a `WidgetFrameView` component, passing in the filter model as an argument.\n5. Renders the subview for the frame view and its content.\n6. Links the element and view components together for future reference.\n7. Initializes and renders chart data within the widget based on the filter's configuration and edit mode hint.\n\n**Key Functionality**\n\n- Creates a new widget for filtering data\n- Renders and initializes chart data within the widget\n- Links the element and view components together\n\n**Context**\n\nThis function appears to be part of a web application, possibly using JavaScript frameworks like React or Angular, that requires dynamic widget creation and configuration based on user input. The `addWidgetForFilter` function is likely used within a larger filtering system, where this widget serves as a container for the filtered data.",
+        "reference_summary": "Add a widget to the analyze page for the given filter\n\nview {View}             Ampersand View instance of the analyze page\nfilter {Filter}         Spot filter instance to create the widget for\neditModeHint {boolean}  Try to start plot in editMode (ie. accepts dnd of facets) [true] or in interaction mode (false)",
+        "BLEU": 0.0,
+        "METEOR": 0.2041,
+        "ROUGE-L": 0.1699
+    },
+    {
+        "function": "function inRange (value, min, max) {\n  const int = parseInt(value, 10)\n\n  return (\n    `${int}` === `${value.replace(/^0/, '')}` &&\n    int >= min &&\n    int <= max\n  )\n}",
+        "prompt_type": "Few-Shot",
+        "llama3_summary": "Summary:\n\nThis function checks if a given value is within a specified range. It first converts the input value to an integer and then verifies three conditions:\n\n1. The string representation of the integer is equal to the original value after removing any leading zeros.\n2. The integer is greater than or equal to the minimum value in the range.\n3. The integer is less than or equal to the maximum value in the range.\n\nIf all conditions are met, the function returns `true`, indicating that the value is within the specified range. Otherwise, it returns `false`.",
+        "reference_summary": "Determine if value is within a numeric range\n@param {String|Number} value - value to check\n@param {Number} min - start of range (inclusive)\n@param {Number} max - end of range (inclusive)\n@returns {Boolean} whether or not value is within range",
+        "BLEU": 0.041,
+        "METEOR": 0.2442,
+        "ROUGE-L": 0.1928
+    },
+    {
+        "function": "function markdown(options) {\n  return new Remarkable(extend({\n    breaks: false,\n    html: true,\n    langPrefix: 'lang-',\n    linkify: true,\n    typographer: false,\n    xhtmlOut: false\n  }, options));\n}",
+        "prompt_type": "Few-Shot",
+        "llama3_summary": "**Function Summary**\n\nThe `markdown` function creates an instance of the Remarkable Markdown parser with customizable options.\n\n**Options**\n\n* `breaks`: Whether to recognize line breaks as HTML breaks (false by default).\n* `html`: Whether to enable HTML formatting (true by default).\n* `langPrefix`: The prefix for language-specific markup (e.g., \"lang-en\" for English).\n* `linkify`: Whether to convert Markdown links to HTML links (true by default).\n* `typographer`: Whether to use the Typographer library for Unicode character rendering (false by default).\n* `xhtmlOut`: Whether to output Markdown in XHTML format (false by default).\n\nThe function takes an optional `options` object, which can be used to override or extend these defaults. The resulting Remarkable instance can then be used to parse and generate Markdown content.",
+        "reference_summary": "Shared settings for remarkable\n\n@param {Object} `options`\n@return {Object}\n@api private",
+        "BLEU": 0.0,
+        "METEOR": 0.0679,
+        "ROUGE-L": 0.046
+    },
+    {
+        "function": "function partitionValueToIndex (partition, value) {\n  var group;\n\n  if (!partition) {\n    // no(sub)partitioning return first element\n    return 0;\n  }\n\n  // with (sub)partitioning\n  group = partition.groups.get(value, 'value');\n\n  if (group) {\n    // string in partition\n    return group.groupIndex;\n  } else {\n    // string not in partition\n    return -1;\n  }\n}",
+        "prompt_type": "Few-Shot",
+        "llama3_summary": "**Function Summary:**\n\nThe `partitionValueToIndex` function determines the index of a given value within a partition. It takes two parameters:\n\n- `partition`: an object containing groups of strings, where each group is associated with its corresponding index.\n- `value`: the string to be searched for in the partition.\n\nThe function returns the index of the `value` if it exists in any of the groups in the `partition`. If the `value` does not exist in any of the groups, it returns -1.",
+        "reference_summary": "Get the index in chartjs datastructures from the group value\nwith proper fallbacks\n@params {Partition} partition (optional)\n@params {Object} value value\n@returns {number|null} index",
+        "BLEU": 0.0,
+        "METEOR": 0.152,
+        "ROUGE-L": 0.1944
+    }
+]

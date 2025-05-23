@@ -1,0 +1,47 @@
+[
+    {
+        "function": "public static boolean check(String passwd, String hashed) {\n        try {\n            String[] parts = hashed.split(\"\\\\$\");\n\n            if (parts.length != 5 || !parts[1].equals(\"s0\")) {\n                throw new IllegalArgumentException(\"Invalid hashed value\");\n            }\n\n            long params = Long.parseLong(parts[2], 16);\n            byte[] salt = decode(parts[3].toCharArray());\n            byte[] derived0 = decode(parts[4].toCharArray());\n\n            int N = (int) Math.pow(2, params >> 16 & 0xffff);\n            int r = (int) params >> 8 & 0xff;\n            int p = (int) params      & 0xff;\n\n            byte[] derived1 = SCrypt.scrypt(passwd.getBytes(\"UTF-8\"), salt, N, r, p, 32);\n\n            if (derived0.length != derived1.length) return false;\n\n            int result = 0;\n            for (int i = 0; i < derived0.length; i++) {\n                result |= derived0[i] ^ derived1[i];\n            }\n            return result == 0;\n        } catch (UnsupportedEncodingException e) {\n            throw new IllegalStateException(\"JVM doesn't support UTF-8?\");\n        } catch (GeneralSecurityException e) {\n            throw new IllegalStateException(\"JVM doesn't support SHA1PRNG or HMAC_SHA256?\");\n        }\n    }",
+        "prompt_type": "Few-Shot",
+        "cohere_summary": "The `check` function appears to be a password verification method that uses the SCrypt key derivation function to securely compare a provided password with a hashed password. Here's a summary:\n\nThe `check` function takes two parameters: a `passwd` (the password to be verified) and a `hashed` (the stored hashed password). It returns a boolean value indicating whether the provided password matches the hashed password.\n\nThe function first splits the `hashed` value into different parts using a regular expression. It checks if the hashed value is in the correct format by verifying the number of parts and the value of the second part.\n\nThen, it extracts parameters, salt, and the derived key from the hashed value. The parameters include the CPU cost factor (N), the block size (r), and the parallelization factor (p).\n\nThe function then uses the SCrypt algorithm to derive a key from the provided `passwd` using the extracted salt and parameters.\n\nFinally, it compares the derived key with the stored derived key from the hashed value. If they match, the function returns `true`, indicating a successful password verification. Otherwise, it returns `false`.\n\nThe function also includes exception handling for potential encoding and security-related issues.\n\nOverall, this function securely verifies a password by comparing the SCrypt-derived keys without exposing the original password or the stored hashed value.",
+        "reference_summary": "Compare the supplied plaintext password to a hashed password.\n\n@param   passwd  Plaintext password.\n@param   hashed  scrypt hashed password.\n\n@return true if passwd matches hashed value.",
+        "BLEU": 0.0,
+        "METEOR": 0.201,
+        "ROUGE-L": 0.125
+    },
+    {
+        "function": "public static Platform detect() throws UnsupportedPlatformException {\n        String osArch = getProperty(\"os.arch\");\n        String osName = getProperty(\"os.name\");\n\n        for (Arch arch : Arch.values()) {\n            if (arch.pattern.matcher(osArch).matches()) {\n                for (OS os : OS.values()) {\n                    if (os.pattern.matcher(osName).matches()) {\n                        return new Platform(arch, os);\n                    }\n                }\n            }\n        }\n\n        String msg = String.format(\"Unsupported platform %s %s\", osArch, osName);\n        throw new UnsupportedPlatformException(msg);\n    }",
+        "prompt_type": "Few-Shot",
+        "cohere_summary": "The function `detect()` attempts to identify the platform (operating system and architecture) on which the code is running. It uses the system properties \"os.arch\" and \"os.name\" to determine the platform details. The function iterates through a list of known architectures (Arch) and operating systems (OS) and tries to match them with the current platform. If a match is found, a `Platform` object representing the detected platform is returned. If no match is found, the function throws an `UnsupportedPlatformException` with a message indicating the unsupported platform.",
+        "reference_summary": "Attempt to detect the current platform.\n\n@return The current platform.\n\n@throws UnsupportedPlatformException if the platform cannot be detected.",
+        "BLEU": 0.0,
+        "METEOR": 0.2429,
+        "ROUGE-L": 0.1739
+    },
+    {
+        "function": "public <T> T getNodeMetaData(Object key) {\n        if (metaDataMap == null) {\n            return (T) null;\n        }\n        return (T) metaDataMap.get(key);\n    }",
+        "prompt_type": "Few-Shot",
+        "cohere_summary": "Here is a summary of the function:\n\n```\nThis function, getNodeMetaData, retrieves metadata associated with a given key from a map. It is a generic method, allowing the caller to specify the return type T. If the map is null or there is no metadata associated with the provided key, the function returns null.\n```",
+        "reference_summary": "Gets the node meta data.\n\n@param key - the meta data key\n@return the node meta data value for this key",
+        "BLEU": 0.0,
+        "METEOR": 0.1025,
+        "ROUGE-L": 0.08
+    },
+    {
+        "function": "public void copyNodeMetaData(ASTNode other) {\n        if (other.metaDataMap == null) {\n            return;\n        }\n        if (metaDataMap == null) {\n            metaDataMap = new ListHashMap();\n        }\n        metaDataMap.putAll(other.metaDataMap);\n    }",
+        "prompt_type": "Few-Shot",
+        "cohere_summary": "The `copyNodeMetaData` method is a member of a class that deals with AST (Abstract Syntax Tree) nodes. It takes another ASTNode object as a parameter and serves to copy the metadata associated with that node to the current node.\n\nHere's a summary of the function:\n\nThe `copyNodeMetaData` method in Java is used to copy metadata from one ASTNode object to another. It takes another ASTNode object, `other`, as a parameter. If the `other` node has metadata (i.e., `other.metaDataMap` is not null), the method ensures that the current node also has a `metaDataMap` initialized. Then, it copies all the metadata from the `other` node's `metaDataMap` to the current node's `metaDataMap`. If the `other` node does not have any metadata, the method simply returns without performing any action.\n\nIn essence, this method facilitates the transfer of metadata information between AST nodes, ensuring that the current node possesses the same metadata as the provided `other` node.",
+        "reference_summary": "Copies all node meta data from the other node to this one\n@param other - the other node",
+        "BLEU": 0.0,
+        "METEOR": 0.218,
+        "ROUGE-L": 0.1263
+    },
+    {
+        "function": "public void setNodeMetaData(Object key, Object value) {\n        if (key==null) throw new GroovyBugError(\"Tried to set meta data with null key on \"+this+\".\");\n        if (metaDataMap == null) {\n            metaDataMap = new ListHashMap();\n        }\n        Object old = metaDataMap.put(key,value);\n        if (old!=null) throw new GroovyBugError(\"Tried to overwrite existing meta data \"+this+\".\");\n    }",
+        "prompt_type": "Few-Shot",
+        "cohere_summary": "The `setNodeMetaData` method is a public method that sets metadata for a specific key-value pair. It takes two parameters, `key` and `value`, which represent the metadata key and its associated value, respectively.\n\nHere's a summary of the method:\n\nThe `setNodeMetaData` method sets metadata for a specific key-value pair. It first checks if the key is null and throws an error if it is, indicating that metadata cannot be set with a null key. If the key is valid, the method then checks if the `metaDataMap` exists. If it doesn't, a new map is created to store the metadata. The method then uses the `put` method of the map to associate the key with the value. If there was already a value associated with the given key, an error is thrown to indicate that overwriting existing metadata is not allowed.\n\nOverall, this method provides a way to associate metadata with a specific key and ensures that metadata is set correctly and consistently.",
+        "reference_summary": "Sets the node meta data.\n\n@param key - the meta data key\n@param value - the meta data value\n@throws GroovyBugError if key is null or there is already meta\ndata under that key",
+        "BLEU": 0.0,
+        "METEOR": 0.1713,
+        "ROUGE-L": 0.1429
+    }
+]

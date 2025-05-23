@@ -1,0 +1,37 @@
+[
+    {
+        "function": "public static boolean check(String passwd, String hashed) {\n        try {\n            String[] parts = hashed.split(\"\\\\$\");\n\n            if (parts.length != 5 || !parts[1].equals(\"s0\")) {\n                throw new IllegalArgumentException(\"Invalid hashed value\");\n            }\n\n            long params = Long.parseLong(parts[2], 16);\n            byte[] salt = decode(parts[3].toCharArray());\n            byte[] derived0 = decode(parts[4].toCharArray());\n\n            int N = (int) Math.pow(2, params >> 16 & 0xffff);\n            int r = (int) params >> 8 & 0xff;\n            int p = (int) params      & 0xff;\n\n            byte[] derived1 = SCrypt.scrypt(passwd.getBytes(\"UTF-8\"), salt, N, r, p, 32);\n\n            if (derived0.length != derived1.length) return false;\n\n            int result = 0;\n            for (int i = 0; i < derived0.length; i++) {\n                result |= derived0[i] ^ derived1[i];\n            }\n            return result == 0;\n        } catch (UnsupportedEncodingException e) {\n            throw new IllegalStateException(\"JVM doesn't support UTF-8?\");\n        } catch (GeneralSecurityException e) {\n            throw new IllegalStateException(\"JVM doesn't support SHA1PRNG or HMAC_SHA256?\");\n        }\n    }",
+        "prompt_type": "Zero-Shot",
+        "cohere_summary": "This function appears to be a password checker that uses the SCrypt key derivation function to securely hash and compare passwords.",
+        "reference_summary": "Compare the supplied plaintext password to a hashed password.\n\n@param   passwd  Plaintext password.\n@param   hashed  scrypt hashed password.\n\n@return true if passwd matches hashed value.",
+        "BERTScore": 0.4922
+    },
+    {
+        "function": "public static Platform detect() throws UnsupportedPlatformException {\n        String osArch = getProperty(\"os.arch\");\n        String osName = getProperty(\"os.name\");\n\n        for (Arch arch : Arch.values()) {\n            if (arch.pattern.matcher(osArch).matches()) {\n                for (OS os : OS.values()) {\n                    if (os.pattern.matcher(osName).matches()) {\n                        return new Platform(arch, os);\n                    }\n                }\n            }\n        }\n\n        String msg = String.format(\"Unsupported platform %s %s\", osArch, osName);\n        throw new UnsupportedPlatformException(msg);\n    }",
+        "prompt_type": "Zero-Shot",
+        "cohere_summary": "The `detect` function attempts to identify the platform by matching the operating system architecture and name against predefined patterns, throwing an exception if the platform is unsupported.",
+        "reference_summary": "Attempt to detect the current platform.\n\n@return The current platform.\n\n@throws UnsupportedPlatformException if the platform cannot be detected.",
+        "BERTScore": 0.6613
+    },
+    {
+        "function": "public <T> T getNodeMetaData(Object key) {\n        if (metaDataMap == null) {\n            return (T) null;\n        }\n        return (T) metaDataMap.get(key);\n    }",
+        "prompt_type": "Zero-Shot",
+        "cohere_summary": "The `getNodeMetaData` function retrieves metadata associated with a given key from a map, returning null if the map is null or if the key is not found.",
+        "reference_summary": "Gets the node meta data.\n\n@param key - the meta data key\n@return the node meta data value for this key",
+        "BERTScore": 0.5054
+    },
+    {
+        "function": "public void copyNodeMetaData(ASTNode other) {\n        if (other.metaDataMap == null) {\n            return;\n        }\n        if (metaDataMap == null) {\n            metaDataMap = new ListHashMap();\n        }\n        metaDataMap.putAll(other.metaDataMap);\n    }",
+        "prompt_type": "Zero-Shot",
+        "cohere_summary": "The `copyNodeMetaData` function efficiently transfers metadata from one ASTNode to another, ensuring that the metadata is preserved and accessible in the destination node.",
+        "reference_summary": "Copies all node meta data from the other node to this one\n@param other - the other node",
+        "BERTScore": 0.5598
+    },
+    {
+        "function": "public void setNodeMetaData(Object key, Object value) {\n        if (key==null) throw new GroovyBugError(\"Tried to set meta data with null key on \"+this+\".\");\n        if (metaDataMap == null) {\n            metaDataMap = new ListHashMap();\n        }\n        Object old = metaDataMap.put(key,value);\n        if (old!=null) throw new GroovyBugError(\"Tried to overwrite existing meta data \"+this+\".\");\n    }",
+        "prompt_type": "Zero-Shot",
+        "cohere_summary": "The `setNodeMetaData` function allows you to set metadata for a node, ensuring that the key is not null and that the metadata map is initialized before adding the new key-value pair.",
+        "reference_summary": "Sets the node meta data.\n\n@param key - the meta data key\n@param value - the meta data value\n@throws GroovyBugError if key is null or there is already meta\ndata under that key",
+        "BERTScore": 0.5337
+    }
+]

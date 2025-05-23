@@ -1,0 +1,37 @@
+[
+    {
+        "function": "function (state, action) {\n    return _.defaults({\n      isValidating: action.isValidating,\n      lastAction: IS_VALIDATING\n    }, state)\n  }",
+        "prompt_type": "Few-Shot",
+        "gemini_summary": "Summary: This function updates the state object by merging in new values for `isValidating` (from the action) and `lastAction` (set to `IS_VALIDATING`) using `_.defaults`. `_.defaults` will only set these values if they are not already present in the state, otherwise it will prioritize the state's existing values.",
+        "reference_summary": "Update is validating result\n@param {State} state - state to update\n@param {Action} action - action\n@returns {State} - updated state",
+        "BERTScore": 0.5755
+    },
+    {
+        "function": "function addWidgetForFilter (view, filter, editModeHint) {\n  var gridster = view._widgetsGridster;\n  var row = filter.row || 1;\n  var col = filter.col || 1;\n  var sizeX = filter.size_x || 3;\n  var sizeY = filter.size_y || 3;\n\n  var el = gridster.add_widget('<div class=\"widgetOuterFrame\"></div>', sizeX, sizeY, col, row);\n  var frameView = new WidgetFrameView({\n    model: filter\n  });\n\n  // render, and render content of widget frame\n  view.renderSubview(frameView, el[0]);\n  frameView.renderContent();\n\n  // link element and view so we can:\n  // a) on remove, get to the HTMLElement from the WidgetFrameView\n  // b) on resize, get to the WidgetFrameView from the HTMLElement\n  frameView.gridsterHook = el[0];\n  $(el[0]).data('spotWidgetFrameView', frameView);\n\n  // try to initialize and render possibly present data\n  // only follow editModeHint when the widget is configured, default to true\n  var chartView = frameView.widget;\n  chartView.model.updateConfiguration();\n  if (chartView.model.isConfigured) {\n    if (!filter.isInitialized) {\n      filter.initDataFilter();\n    }\n    if (!chartView.isInitialized) {\n      chartView.initChart();\n    }\n    chartView.update();\n\n    frameView.editMode = editModeHint;\n  } else {\n    // widget is not configured, ignore editModeHint\n    // and always go to edit mode\n    frameView.editMode = true;\n  }\n\n  filter.on('newData', function () {\n    chartView.update();\n  });\n}",
+        "prompt_type": "Few-Shot",
+        "gemini_summary": "Summary: This function adds a widget to a grid-based view based on a provided filter object. It creates a new widget frame, renders it within the view, links the frame to its corresponding HTML element for later access, and initializes the widget's data and chart if configured. It also sets the widget's edit mode based on configuration and an edit mode hint, and sets up a listener to update the chart when new data is available.",
+        "reference_summary": "Add a widget to the analyze page for the given filter\n\nview {View}             Ampersand View instance of the analyze page\nfilter {Filter}         Spot filter instance to create the widget for\neditModeHint {boolean}  Try to start plot in editMode (ie. accepts dnd of facets) [true] or in interaction mode (false)",
+        "BERTScore": 0.4812
+    },
+    {
+        "function": "function inRange (value, min, max) {\n  const int = parseInt(value, 10)\n\n  return (\n    `${int}` === `${value.replace(/^0/, '')}` &&\n    int >= min &&\n    int <= max\n  )\n}",
+        "prompt_type": "Few-Shot",
+        "gemini_summary": "Summary: This function checks if a given value is an integer within a specified range (min and max). It first parses the value into an integer and then verifies that the parsed integer, when converted back to a string, matches the original value (excluding any leading zeros). It also ensures that the integer falls between the provided minimum and maximum values (inclusive). It returns `true` if both conditions are met, otherwise `false`.",
+        "reference_summary": "Determine if value is within a numeric range\n@param {String|Number} value - value to check\n@param {Number} min - start of range (inclusive)\n@param {Number} max - end of range (inclusive)\n@returns {Boolean} whether or not value is within range",
+        "BERTScore": 0.5802
+    },
+    {
+        "function": "function markdown(options) {\n  return new Remarkable(extend({\n    breaks: false,\n    html: true,\n    langPrefix: 'lang-',\n    linkify: true,\n    typographer: false,\n    xhtmlOut: false\n  }, options));\n}",
+        "prompt_type": "Few-Shot",
+        "gemini_summary": "Summary: This function creates a Remarkable (Markdown parser) instance with configurable options. It merges default settings (breaks, html, langPrefix, linkify, typographer, xhtmlOut) with user-provided options and returns the new Remarkable object.",
+        "reference_summary": "Shared settings for remarkable\n\n@param {Object} `options`\n@return {Object}\n@api private",
+        "BERTScore": 0.4459
+    },
+    {
+        "function": "function partitionValueToIndex (partition, value) {\n  var group;\n\n  if (!partition) {\n    // no(sub)partitioning return first element\n    return 0;\n  }\n\n  // with (sub)partitioning\n  group = partition.groups.get(value, 'value');\n\n  if (group) {\n    // string in partition\n    return group.groupIndex;\n  } else {\n    // string not in partition\n    return -1;\n  }\n}",
+        "prompt_type": "Few-Shot",
+        "gemini_summary": "Summary: This function takes a partition object and a value as input. If the partition is empty, it returns 0. Otherwise, it attempts to find a group within the partition that matches the input value. If a matching group is found, it returns the group's index. If no matching group is found, it returns -1.",
+        "reference_summary": "Get the index in chartjs datastructures from the group value\nwith proper fallbacks\n@params {Partition} partition (optional)\n@params {Object} value value\n@returns {number|null} index",
+        "BERTScore": 0.4509
+    }
+]
